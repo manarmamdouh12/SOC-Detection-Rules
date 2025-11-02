@@ -1,0 +1,36 @@
+title: Suspicious Base64 Encoded PowerShell Invoke Execution
+id: 6fa7ac92-911b-4a92-93e8-8476c8b3a731
+status: experimental
+description: |
+  Detects PowerShell or pwsh processes executing Base64-encoded commands that contain
+  obfuscated forms of "Invoke" in their encoded payload. This is a common obfuscation
+  technique used by attackers to evade static detection.
+author: Manar Mamdouh
+date: 2025/10/31
+references:
+   - https://www.picussecurity.com/resource/blog/cavalry-werewolf-apt
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection_powershell:
+    FileName|endswith:
+      - 'powershell.exe'
+      - 'pwsh.exe'
+  selection_encoded:
+    ProcessCommandLine|contains: ' -e'
+  selection_base64_invoke:
+    ProcessCommandLine|contains:
+      - 'SQBuAHYAbwBrAGUALQ'
+      - 'kAbgB2AG8AawBlAC0A'
+      - 'JAG4AdgBvAGsAZQAtA'
+      - 'SW52b2tlL'
+      - 'ludm9rZS'
+      - 'JbnZva2Ut'
+  condition: selection_powershell and selection_encoded and selection_base64_invoke
+level: high
+tags:
+  - attack.execution
+  - attack.t1059.001    
+  - attack.defense_evasion
+  - attack.t1027        
