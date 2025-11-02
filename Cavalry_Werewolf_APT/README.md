@@ -49,7 +49,7 @@ Detects file downloads from Telegram infrastructure, used to deliver payloads or
 
 Flags the execution of SOCKS5 proxy tools, commonly used to tunnel or relay malicious traffic.
 
-Recommendation:
+✅ Recommendation:
 
 Each detection use case in the /Detection_UseCases/ directory corresponds to a MITRE ATT&CK stage observed in the Cavalry Werewolf campaign.
 Sigma rules in /Techniques/ can be imported directly into SIEM environments for behavioral detection.
