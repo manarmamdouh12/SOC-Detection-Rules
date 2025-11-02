@@ -1,0 +1,53 @@
+title: Suspicious cmd.exe spawn with /c from non-interactive parent
+id: 5a8a4b3c-9d2e-4f7a-bcde-123456789abc
+status: experimental
+description: Detects stealthy command execution where cmd.exe is launched with hidden window attributes
+  from non-interactive processes. This technique is commonly used by attackers to
+  execute system commands silently without showing any visible window to the victim.
+date: 2024/01/30
+references:
+ -https://www.picussecurity.com/resource/blog/cavalry-werewolf-apt
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|endswith:
+      - '\cmd.exe'
+      - '\cmd'
+    CommandLine|contains: '/c'
+    ParentImage|endswith:
+      - '\amigo.exe'
+      - '\browser.exe'
+      - '\chrome.exe'
+      - '\firefox.exe'
+      - '\httpd.exe'
+      - '\iexplore.exe'
+      - '\jbosssvc.exe'
+      - '\microsoftedge.exe'
+      - '\microsoftedgecp.exe'
+      - '\MicrosoftEdgeSH.exe'
+      - '\mshta.exe'
+      - '\nginx.exe'
+      - '\outlook.exe'
+      - '\php-cgi.exe'
+      - '\regsvr32.exe'
+      - '\rundll32.exe'
+      - '\safari.exe'
+      - '\services.exe'
+      - '\sqlagent.exe'
+      - '\sqlserver.exe'
+      - '\vivaldi.exe'
+      - '\w3wp.exe'
+  filter:
+    CommandLine|contains:
+      - 'C:\\Program Files'
+      - 'C:\\ProgramData'
+  condition: selection and not filter
+falsepositives:
+  - Legitimate administrative scripts
+  - Application update processes
+tags:
+  - attack.execution
+  - attack.t1059.003
+level: medium
