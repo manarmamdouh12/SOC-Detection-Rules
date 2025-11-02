@@ -3,6 +3,7 @@ Cavalry Werewolf APT – Detection Use Cases Repository
 Source: https://www.picussecurity.com/resource/blog/cavalry-werewolf-apt
 
 Author: Manar Mamdouh
+
 Date: November 2025
 
 🧠 Threat Overview
