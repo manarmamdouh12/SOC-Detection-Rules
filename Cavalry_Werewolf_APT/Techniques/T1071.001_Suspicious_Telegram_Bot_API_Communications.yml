@@ -1,0 +1,25 @@
+title: Suspicious Telegram Bot API Communications
+id: c64c5175-5189-431b-a55e-6d9882158252
+status: test
+description: Detects HTTP requests to Telegram Bot API endpoints with additional context for suspicious patterns
+author: Manar Mamdouh
+date: 2025/10/31
+references:
+ -https://www.picussecurity.com/resource/blog/cavalry-werewolf-apt
+logsource:
+    category: proxy
+detection:
+    telegram_api:
+        cs-host: 'api.telegram.org'
+    bot_endpoints:
+        c-uri|startswith:
+            - '/bot'
+            - '/sendMessage'
+            - '/getUpdates'
+            - '/getMe'
+    condition: telegram_api and bot_endpoints
+level: high
+tags:
+    - attack.command-and-control
+    - attack.t1102.002
+    - attack.t1071.001
