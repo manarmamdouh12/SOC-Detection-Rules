@@ -1,0 +1,38 @@
+title: Suspicious cmd.exe Execution from Temporary or Public Directories
+id: 4b8e9d11-238a-4f8a-8d7f-ff12a4b67f92
+status: experimental
+description: Detects cmd.exe executions where the parent process originates from suspicious directories
+  such as Temp or Public folders. This behavior is often seen in malware or malicious scripts
+  dropped and executed from writable locations.
+author: Manar Mamdouh
+date: 2025/10/31
+references:
+  - https://www.picussecurity.com/resource/blog/cavalry-werewolf-apt
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection_cmd:
+    Image|endswith: '\cmd.exe'
+  suspicious_parent_path:
+    ParentCommandLine|contains:
+      - '\AppData\Local\Temp\'
+    ParentCommandLine|startswith:
+      - 'C:\Windows\Temp\'
+      - 'C:\Users\Public\'
+      - 'C:\Temp\'
+  legitimate_sources:
+    ParentCommandLine|contains:
+      - 'C:\ProgramData\'
+      - 'C:\Windows\System32\'
+      - 'C:\Program Files\'
+      - 'Driver_Windows'
+  condition: selection_cmd and suspicious_parent_path and not legitimate_sources
+falsepositives:
+  - Legitimate scripts or installers executing from temporary directories
+  - Software deployment tools
+  - System administration scripts
+level: high
+tags:
+  - attack.execution
+  - attack.t1059.003
