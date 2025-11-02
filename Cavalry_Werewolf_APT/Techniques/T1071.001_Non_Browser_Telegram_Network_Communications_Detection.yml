@@ -1,0 +1,45 @@
+title: Non-Browser Telegram Network Communications Detection
+id: a1b2c3d4-5678-90ab-cdef-123456789012
+status: experimental
+description: Detects potential command and control communications through Telegram infrastructure
+  by identifying connections to Telegram domains and IP ranges from non-browser and non-official 
+  client processes which may indicates of otentially malicious use of Telegram services for C2 communications.
+references:
+  -  -https://www.picussecurity.com/resource/blog/cavalry-werewolf-apt
+author: Manar Mamdouh
+date: 2025/10/31
+logsource:
+  category: network_connection
+  product: windows
+detection:
+  selection:
+    DestinationUrl|contains|all:
+      - 'telegram'
+      - '*.telegram.org'
+      - 't.me'
+      - 'telegram.me'
+      - 'cdn-telegram.org'
+    DestinationIp|startswith:
+      - '91.108.4.'
+      - '91.108.8.'
+      - '91.108.12.'
+      - '91.108.16.'
+      - '91.108.20.'
+      - '91.108.56.'
+      - '149.154.160.'
+      - '149.154.164.'
+      - '149.154.168.'
+      - '149.154.172.'
+  filter:
+    Image|endswith:
+      - '\chrome.exe'
+      - '\msedge.exe'
+      - '\firefox.exe'
+      - '\opera.exe'
+      - '\telegram.exe'
+      - '\telegramdesktop.exe'
+  condition: selection and not filter
+level: medium
+tags:
+  - attack.command_and_control
+  - attack.t1071.001
