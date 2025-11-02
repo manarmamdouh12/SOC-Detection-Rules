@@ -1,0 +1,37 @@
+title: PowerShell Defense Evasion via ExecutionPolicy Bypass
+id: 1b2f4a6e-9c3d-4f2b-8a7e-5c6d7e8f9a01
+status: experimental
+description: |
+        Detects PowerShell or cmd-launched PowerShell using ExecutionPolicy bypass combined with defense evasion
+        techniques such as hidden windows, encoded commands, or Base64 decoding. This behavior is commonly seen
+        in stealthy script execution, malware, or fileless attacks.
+author: Manar Mamdouh
+date: 2025/10/31
+references:
+   - https://www.picussecurity.com/resource/blog/cavalry-werewolf-apt
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection_image:
+    Image|endswith:
+      - '\powershell.exe'
+      - '\pwsh.exe'
+      - '\cmd.exe'
+  execution_policy_bypass:
+    CommandLine|contains:
+      - '-ExecutionPolicy Bypass'
+      - '-ep Bypass'
+      - '-exec Bypass'
+  evasion_flags:
+    CommandLine|contains:
+      - '-WindowStyle Hidden'
+      - '-EncodedCommand'
+      - '::FromBase64String('
+  condition: selection_image and 1 of execution_policy_bypass and 1 of evasion_flags
+level: high
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - attack.defense_evasion
+  - attack.t1562.001
