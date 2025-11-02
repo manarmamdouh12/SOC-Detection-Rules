@@ -1,0 +1,33 @@
+title: Registry persistence via Run Keys in Non-Standard Directories
+id: a1b2c3d4-5678-90ef-ghij-klmnopqrstuv
+status: experimental
+description: Detects registry persistence mechanisms established through Windows Run keys that
+  reference executables in temporary, recycler, or public directories. This technique is commonly abused
+  by malware to maintain persistence while evading detection by residing in directories with less scrutiny.
+author: Manar Mamdouh
+date: 2025/11/1
+references:
+   - https://www.picussecurity.com/resource/blog/cavalry-werewolf-apt
+logsource:
+  category: registry_event
+  product: windows
+detection:
+  selection_regkey:
+    TargetObject|endswith: 
+      - '\Software\Microsoft\Windows\CurrentVersion\Run'
+      - '\Software\Microsoft\Windows\CurrentVersion\RunOnce'
+  selection_paths:
+    Details|contains:
+      - ':\$Recycle.bin\'
+      - ':\ProgramData\'
+      - ':\Temp\'
+      - ':\Users\Default\'
+      - ':\Users\Public\'
+      - ':\Windows\Temp\'
+      - '\AppData\Local\Temp\'
+      - '\\Downloads\\'
+  condition: selection_regkey and selection_paths
+level: medium
+tags:
+  - attack.persistence
+  - attack.t1547.001
