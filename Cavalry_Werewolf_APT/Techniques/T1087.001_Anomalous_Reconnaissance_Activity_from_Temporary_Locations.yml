@@ -1,0 +1,49 @@
+title: Anomalous Reconnaissance Activity from temporary location
+id: a1b2c3d4-5678-90ab-cdef-123456789012
+status: experimental
+description: Detects reconnaissance commands executed from temporary or public directories,
+   which often indicates malicious activity such as malware post-exploitation, LOLBin abuse,
+      or attacker discovery operations, making this an effective indicator of compromise when combined
+   with common enumeration and system information gathering commands.
+author: Manar Mamdouh
+date: 2025/10/30
+references:
+    - https://www.picussecurity.com/resource/blog/cavalry-werewolf-apt
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: '\cmd.exe'
+        CommandLine|contains:
+            - 'whoami'
+            - 'net user'
+            - 'net localgroup'
+            - 'net group'
+            - 'nltest'
+            - 'systeminfo'
+            - 'hostname'
+            - 'ipconfig'
+            - 'netstat'
+            - 'tasklist'
+            - 'quser'
+            - 'query user'
+            - 'wmic process list'
+            - 'reg query HKLM'
+            - 'sc query'
+            - 'powershell'
+            - 'Get-WmiObject'
+            - 'for /f'
+        ParentImage|contains:
+            - '\AppData\Local\Temp\'
+            - '\Windows\Temp\'
+            - '\Users\Public\'
+            - '\Temp\'
+    condition: selection
+falsepositives:
+    - Legitimate administrative scripts running from temporary directories
+    - Some development tools may trigger this rule
+level: High
+tags:
+    - attack.discovery
+    - attack.t1059.003
