@@ -5,13 +5,6 @@ Each folder is based on a specific Threat Intelligence Report or APT campaign, w
 
 The goal is to help security teams detect, investigate, and respond to evolving threats by translating threat intelligence into actionable detection logic for SIEM and EDR platforms.
 
-SOC-Detection-Rules/
-├── Cavalry_Werewolf_APT/                 → Detection package for Picus APT report
-│   ├── README.md                         → Summary of the campaign and key techniques
-│   ├── Detection_UseCases/               → Markdown files explaining each ATT&CK stage
-│   └── Techniques/                       → Sigma rules per MITRE ATT&CK ID
-│
-├── Other_APT_Campaigns/                  → Future additions (e.g., FIN7, APT29, etc.)
 
 🚀 Objective
 
