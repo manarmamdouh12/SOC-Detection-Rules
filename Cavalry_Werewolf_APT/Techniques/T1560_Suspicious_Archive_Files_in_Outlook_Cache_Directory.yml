@@ -1,0 +1,57 @@
+title: Suspicious Archive Files in Outlook Cache Directory
+id: 7d8e9f01-2345-6789-abcd-ef0123456789
+status: experimental
+description: Detects creation of suspicious archive files with document-like names in Outlook INetCache directory,
+    indicating potential phishing payloads downloaded by Outlook client.
+author: Manar Mamdouh
+date: 2024/10/31
+references:
+   - https://www.picussecurity.com/resource/blog/cavalry-werewolf-apt
+logsource:
+    category: file_event
+    product: windows
+detection:
+    selection_path:
+        TargetFilename|contains:
+            - '\Microsoft\Windows\INetCache\Content.Outlook\'
+    selection_suspicious_names:
+     TargetFileName|contains:
+      - 'bonus'
+      - 'payout'
+      - 'layoff'
+      - 'termination'
+      - 'urgent'
+      - 'immediate'
+      - 'confidential'
+      - 'invoice'
+      - 'salary'
+      - 'payment'
+      - 'results'
+      - 'award'
+      - 'audit'
+      - 'project'
+      - 'official'
+      - 'legal'
+      - 'subpoena'
+      - 'money'
+      - 'review'
+      - 'transaction'
+    selection_extensions:
+     TargetFileName|endswith:
+      - '.exe'
+      - '.scr'
+      - '.zip'
+      - '.js'
+      - '.vbs'
+      - '.wsf'
+      - '.jar'
+      - '.docm'
+      - '.xlsm'
+      - '.pptm'
+    condition: selection_keywords and selection_extensions
+level: high
+tags:
+    - attack.initial_access
+    - attack.t1566.001
+    - attack.t1204.002
+    - attack.t1553.005
