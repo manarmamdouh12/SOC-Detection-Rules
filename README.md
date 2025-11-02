@@ -23,4 +23,5 @@ Includes investigation guidance and response context.
 👩‍💻 Author
 
 Manar Mamdouh – SOC Analyst | SOC Analyst Engineer
+
 Focused on transforming threat intelligence into effective, real-world detections.
